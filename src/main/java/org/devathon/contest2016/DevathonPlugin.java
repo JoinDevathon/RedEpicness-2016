@@ -54,7 +54,7 @@ public class DevathonPlugin extends JavaPlugin implements Listener {
                                     .multiply(-2).add(direction.clone());
                         }
                         else if(check.getType().isOccluding()) return;
-                        p.getWorld().spigot().playEffect(display.add(direction), Effect.COLOURED_DUST, 0, 0, 0, 0, 0, 0, 0, 50);
+                        p.getWorld().spigot().playEffect(display.add(direction), Effect.LAVADRIP, 0, 0, 0, 0, 0, 0, 0, 50);
                     }
                 });
                 break;
@@ -91,41 +91,6 @@ public class DevathonPlugin extends JavaPlugin implements Listener {
             LaserSource.ALL_SOURCES.remove(e.getBlock().getLocation()).stopFire();
         }
     }
-
-    /*@EventHandler
-    public void block(BlockPlaceEvent e){
-        if(!e.getBlockPlaced().getType().equals(Material.DISPENSER)) return;
-        Dispenser disp = new Dispenser(e.getBlockPlaced().getType(), e.getBlockPlaced().getData());
-        BlockFace facing = disp.getFacing();
-
-        AtomicDouble verifiedDistance = new AtomicDouble(-1);
-        Bukkit.getScheduler().scheduleSyncRepeatingTask(this, () -> {
-            Vector direction = new Vector(facing.getModX(), facing.getModY(), facing.getModZ()).multiply(0.15);
-            Location origin = e.getBlockPlaced().getLocation().add(0.5, 0.5, 0.5)
-                    .add(direction.clone().normalize().multiply(0.51));
-            Location display = origin.clone();
-            double distance = 0;
-            for(int i = 0; i < 1000; i++){
-                distance = i*0.15;
-                Block check = display.add(direction).getBlock();
-                if(check.getType().equals(Material.DROPPER)){
-                    Dispenser displ = new Dispenser(check.getType(), check.getData());
-                    BlockFace facing1 = displ.getFacing();
-                    direction = new Vector(facing1.getModX(), facing1.getModY(), facing1.getModZ()).multiply(0.15);
-                    display = check.getLocation().add(0.5, 0.5, 0.5).add(direction.clone().normalize().multiply(0.51));
-                }
-                else if(check.getType().isOccluding()) break;
-                if(check.getWorld().getNearbyEntities(display, 0.1, 0.1, 0.1).size() > 0) break;
-                e.getBlockPlaced().getWorld().spigot().playEffect(display, Effect.COLOURED_DUST, 0, 0, 0, 0, 0, 0, 0, 50);
-            }
-            if(verifiedDistance.get() == -1){
-                verifiedDistance.set(distance);
-            } else if(verifiedDistance.get() != distance){
-                e.getBlockPlaced().getWorld().playSound(display, Sound.BLOCK_NOTE_PLING, 1, 1);
-            }
-            Bukkit.broadcastMessage("Distance: "+distance);
-        }, 2, 2);
-    }*/
 
 }
 
