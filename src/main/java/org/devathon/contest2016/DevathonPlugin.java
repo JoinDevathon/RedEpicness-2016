@@ -8,7 +8,6 @@ import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.util.Vector;
@@ -29,7 +28,7 @@ public class DevathonPlugin extends JavaPlugin implements Listener{
     @EventHandler
     public void onRightClick(PlayerInteractEvent e){
         Player p = e.getPlayer();
-        if(!e.getAction().equals(Action.RIGHT_CLICK_AIR)
+        if(!e.getAction().toString().contains("RIGHT")
                 || !p.getInventory().getItemInMainHand().getType().equals(Material.BLAZE_ROD)) return;
         Bukkit.getScheduler().runTaskAsynchronously(this, () -> {
             Vector direction = p.getEyeLocation().getDirection().normalize().multiply(0.02);
@@ -44,8 +43,7 @@ public class DevathonPlugin extends JavaPlugin implements Listener{
                     direction = normal.clone().multiply(direction.clone().dot(normal.clone())).multiply(-2).add(direction.clone());
                 }
                 else if(check.getType().isOccluding()) return;
-                check = display.clone().add(direction).getBlock();
-                p.getWorld().spigot().playEffect(display.add(direction), Effect.LAVADRIP, 0, 0, 255, 0, 0, 0, 0, 50);
+                p.getWorld().spigot().playEffect(display.add(direction), Effect.LAVADRIP, 0, 0, 0, 0, 0, 0, 0, 50);
             }
         });
     }
