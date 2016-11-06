@@ -6,6 +6,7 @@ import org.bukkit.Location;
 import org.bukkit.Sound;
 
 import java.util.HashMap;
+import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * Created by Red_Epicness on 11/6/2016 at 11:57 AM.
@@ -40,16 +41,32 @@ public class LaserSource {
         if(fire) return;
         fire = true;
         AtomicDouble distanceVerified = new AtomicDouble(-1);
+        AtomicInteger counter = new AtomicInteger(0);
+        boolean alwayInvis = laserBeam.isInvisible();
         taskID = Bukkit.getScheduler().scheduleAsyncRepeatingTask(DevathonPlugin.getInstance(), () -> {
             double distance = laserBeam.fire();
+            if(!alwayInvis){
+                if(counter.get() == 0){
+                    if(laserBeam.isInvisible()) laserBeam.toggleInvisible();
+                }
+                else {
+                    if(!laserBeam.isInvisible()) laserBeam.toggleInvisible();
+                }
+            }
             if(distanceVerified.get() == -1){
                 distanceVerified.set(distance);
             }
             else if(distance != distanceVerified.get()){
                 laserBeam.getOrigin().getWorld().playSound(laserBeam.getOrigin(), Sound.BLOCK_NOTE_PLING, 1, 1);
             }
-            if(!fire) Bukkit.getScheduler().cancelTask(taskID);
-        }, 5, 5);
+            if(counter.incrementAndGet() > 5){
+                counter.set(0);
+            }
+            if(!fire){
+                if(laserBeam.isInvisible() != alwayInvis) laserBeam.toggleInvisible();
+                Bukkit.getScheduler().cancelTask(taskID);
+            }
+        }, 1, 1);
     }
 
     public LaserBeam getLaserBeam() {

@@ -1,10 +1,18 @@
+
 package org.devathon.contest2016;
 
-import org.bukkit.*;
+import org.bukkit.Bukkit;
+import org.bukkit.Effect;
+import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.LivingEntity;
 import org.bukkit.material.Dispenser;
 import org.bukkit.util.Vector;
+
+import java.util.Collection;
 
 /**
  * Created by Red_Epicness on 11/6/2016 at 11:41 AM.
@@ -16,6 +24,7 @@ public class LaserBeam {
     private final Location origin;
     private final Vector direction;
     private boolean invisible;
+    private double damage = 0.0;
 
     public LaserBeam(int length, double density, Location origin, Vector direction, boolean invisible){
         this.length = length;
@@ -47,13 +56,27 @@ public class LaserBeam {
             else if(check.getType().isOccluding())
                 break;
 
-            if(check.getWorld().getNearbyEntities(display, 0.1, 0.1, 0.1).size() > 0)
+            Collection<Entity> nearby = check.getWorld().getNearbyEntities(display, 0.1, 0.1, 0.1);
+            if(nearby.size() > 0){
+                Bukkit.getScheduler().runTask(DevathonPlugin.getInstance(), () -> {
+                    if(damage > 0) nearby.stream().filter(e -> e instanceof LivingEntity)
+                            .forEach(e -> ((LivingEntity) e).damage(damage));
+                });
                 break;
+            }
 
             if(!invisible) origin.getWorld().spigot().playEffect(display, Effect.COLOURED_DUST, 0, 0, 0, 0, 0, 0, 0, 50);
         }
 
         return distance;
+    }
+
+    public void setDamage(double damage) {
+        this.damage = damage;
+    }
+
+    public double getDamage() {
+        return damage;
     }
 
     public boolean isInvisible() {

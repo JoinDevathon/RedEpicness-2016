@@ -70,7 +70,7 @@ public class DevathonPlugin extends JavaPlugin implements Listener {
                     Location origin = block.getLocation().add(0.5, 0.5, 0.5)
                             .add(direction.clone().normalize().multiply(0.51));
                     LaserSource.ALL_SOURCES.put(block.getLocation(),
-                            new LaserSource(new LaserBeam(1000, 0.15, origin, direction, false)));
+                            new LaserSource(new LaserBeam(1000, 0.25, origin, direction, false)));
                 }
                 if(!p.isSneaking()){
                     LaserSource.ALL_SOURCES.get(block.getLocation()).toggleFiring();
@@ -80,6 +80,21 @@ public class DevathonPlugin extends JavaPlugin implements Listener {
                     LaserSource.ALL_SOURCES.get(block.getLocation()).getLaserBeam().toggleInvisible();
                     p.sendMessage("Laser invisibility: "+LaserSource.ALL_SOURCES.get(block.getLocation()).getLaserBeam().isInvisible());
                 }
+                break;
+            }
+            case BLAZE_POWDER: {
+                if(e.getClickedBlock() == null || !e.getClickedBlock().getType().equals(Material.DISPENSER)) return;
+                Block block = e.getClickedBlock();
+                if(!LaserSource.ALL_SOURCES.containsKey(block.getLocation())) return;
+                e.setCancelled(true);
+                LaserBeam beam = LaserSource.ALL_SOURCES.get(block.getLocation()).getLaserBeam();
+                if(beam.getDamage() <= 0){
+                    beam.setDamage(0.5);
+                }
+                else {
+                    beam.setDamage(0.0);
+                }
+                p.sendMessage("Damage : "+LaserSource.ALL_SOURCES.get(block.getLocation()).getLaserBeam().getDamage());
             }
         }
 
