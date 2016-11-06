@@ -56,4 +56,11 @@ public class LaserBeam {
         return distance;
     }
 
+    public boolean isInvisible() {
+        return invisible;
+    }
+
+    public void toggleInvisible() {
+        this.invisible = !this.invisible;
+    }
 }

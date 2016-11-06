@@ -52,4 +52,7 @@ public class LaserSource {
         }, 5, 5);
     }
 
+    public LaserBeam getLaserBeam() {
+        return laserBeam;
+    }
 }

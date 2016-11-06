@@ -72,7 +72,14 @@ public class DevathonPlugin extends JavaPlugin implements Listener {
                     LaserSource.ALL_SOURCES.put(block.getLocation(),
                             new LaserSource(new LaserBeam(1000, 0.15, origin, direction, false)));
                 }
-                LaserSource.ALL_SOURCES.get(block.getLocation()).toggleFiring();
+                if(!p.isSneaking()){
+                    LaserSource.ALL_SOURCES.get(block.getLocation()).toggleFiring();
+                    p.sendMessage("Laser firing: "+LaserSource.ALL_SOURCES.get(block.getLocation()).isFiring());
+                }
+                else {
+                    LaserSource.ALL_SOURCES.get(block.getLocation()).getLaserBeam().toggleInvisible();
+                    p.sendMessage("Laser invisibility: "+LaserSource.ALL_SOURCES.get(block.getLocation()).getLaserBeam().isInvisible());
+                }
             }
         }
 
